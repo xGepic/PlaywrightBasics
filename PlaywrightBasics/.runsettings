@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Playwright reads this file when you pass it explicitly:
+
+      dotnet test -s .runsettings
+
+  It is the .NET equivalent of playwright.config.ts. Everything here can also
+  be set per-run with an environment variable, e.g.:
+
+      $env:HEADED=1; dotnet test
+      $env:BROWSER='firefox'; dotnet test
+-->
+<RunSettings>
+  <Playwright>
+    <!-- chromium (default) | firefox | webkit -->
+    <BrowserName>chromium</BrowserName>
+
+    <!-- Milliseconds. Applies to actions and Expect() assertions. -->
+    <ExpectTimeout>5000</ExpectTimeout>
+
+    <LaunchOptions>
+      <!-- Flip to false to watch the browser while it works. -->
+      <Headless>true</Headless>
+      <!-- Slows every action down, handy when learning what a test does. -->
+      <SlowMo>0</SlowMo>
+      <!-- <Channel>chrome</Channel>  use the real installed Chrome -->
+    </LaunchOptions>
+  </Playwright>
+
+  <NUnit>
+    <!-- How many tests run at once. Each gets its own browser context. -->
+    <NumberOfTestWorkers>4</NumberOfTestWorkers>
+  </NUnit>
+</RunSettings>

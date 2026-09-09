@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Playwright Demo Form</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    fieldset { margin-bottom: 1.5rem; border: 1px solid #ccc; border-radius: 6px; }
+    label { display: block; margin: .5rem 0 .2rem; }
+    input[type=text], input[type=email], textarea, select { width: 100%; padding: .4rem; }
+    .row { display: flex; gap: 1rem; align-items: center; }
+    .hidden { display: none; }
+    #status { padding: .5rem; background: #eef; border-radius: 4px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: .4rem .6rem; text-align: left; }
+  </style>
+</head>
+<body>
+  <h1>Playwright Demo Form</h1>
+
+  <!-- Every control below is labelled, so GetByLabel / GetByRole work naturally.
+       This is what "accessible markup makes tests easy" means in practice. -->
+  <form id="signup">
+    <fieldset>
+      <legend>Account</legend>
+
+      <label for="username">Username</label>
+      <input id="username" type="text" placeholder="e.g. ada.lovelace" required>
+
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="you@example.com" required>
+
+      <label for="country">Country</label>
+      <select id="country">
+        <option value="">-- choose --</option>
+        <option value="at">Austria</option>
+        <option value="de">Germany</option>
+        <option value="ch">Switzerland</option>
+      </select>
+
+      <label for="bio">Bio</label>
+      <textarea id="bio" rows="3" placeholder="Tell us something"></textarea>
+    </fieldset>
+
+    <fieldset>
+      <legend>Preferences</legend>
+
+      <div class="row">
+        <input id="newsletter" type="checkbox">
+        <label for="newsletter">Subscribe to newsletter</label>
+      </div>
+      <div class="row">
+        <input id="terms" type="checkbox">
+        <label for="terms">I accept the terms</label>
+      </div>
+
+      <div class="row">
+        <input id="plan-free" type="radio" name="plan" value="free" checked>
+        <label for="plan-free">Free plan</label>
+        <input id="plan-pro" type="radio" name="plan" value="pro">
+        <label for="plan-pro">Pro plan</label>
+      </div>
+    </fieldset>
+
+    <button type="submit" id="submit">Create account</button>
+    <button type="button" id="reset-btn">Reset</button>
+  </form>
+
+  <p id="status" role="status">Not submitted yet.</p>
+
+  <!-- Appears only after a delay: the point of Playwright's auto-waiting. -->
+  <button id="slow-trigger">Load profile</button>
+  <div id="profile" class="hidden" data-testid="profile-card">
+    <h2>Ada Lovelace</h2>
+    <p>Profile loaded.</p>
+  </div>
+
+  <button id="dialog-trigger">Delete account</button>
+
+  <h2>Orders</h2>
+  <table data-testid="orders">
+    <thead><tr><th>Order</th><th>Item</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>1001</td><td>Keyboard</td><td>Shipped</td></tr>
+      <tr><td>1002</td><td>Monitor</td><td>Pending</td></tr>
+      <tr><td>1003</td><td>Mouse</td><td>Shipped</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('signup');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('username').value;
+      const plan = document.querySelector('input[name=plan]:checked').value;
+      status.textContent = `Welcome, ${name}! Plan: ${plan}.`;
+    });
+
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      form.reset();
+      status.textContent = 'Not submitted yet.';
+    });
+
+    // Deliberately slow, so a naive test would fail without auto-waiting.
+    document.getElementById('slow-trigger').addEventListener('click', () => {
+      setTimeout(() => document.getElementById('profile').classList.remove('hidden'), 1200);
+    });
+
+    document.getElementById('dialog-trigger').addEventListener('click', () => {
+      if (confirm('Really delete your account?')) {
+        status.textContent = 'Account deleted.';
+      } else {
+        status.textContent = 'Deletion cancelled.';
+      }
+    });
+  </script>
+</body>
+</html>
