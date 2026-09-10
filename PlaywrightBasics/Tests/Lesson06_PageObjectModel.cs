@@ -1,7 +1,7 @@
 using Microsoft.Playwright.NUnit;
 using PlaywrightBasics.Pages;
 
-namespace PlaywrightBasics.Structure;
+namespace PlaywrightBasics.Basics;
 
 /// <summary>
 /// LESSON 6 — Page Object Model.

@@ -1,7 +1,7 @@
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 
-namespace PlaywrightBasics.Structure;
+namespace PlaywrightBasics.Basics;
 
 /// <summary>
 /// LESSON 5 — Base classes, hooks and configuration.

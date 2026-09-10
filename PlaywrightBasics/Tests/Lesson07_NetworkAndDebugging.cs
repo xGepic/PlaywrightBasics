@@ -2,7 +2,7 @@ using System.Text.Json;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 
-namespace PlaywrightBasics.Advanced;
+namespace PlaywrightBasics.Basics;
 
 /// <summary>
 /// LESSON 7 — Network interception, screenshots and traces.
