@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 
-namespace PlaywrightBasics.Basics;
+namespace PlaywrightBasics.Tests;
 
 /// <summary>
 /// LESSON 3 — Assertions, and why Expect() beats Assert.That().

@@ -1,7 +1,7 @@
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 
-namespace PlaywrightBasics.Basics;
+namespace PlaywrightBasics.Tests;
 
 /// <summary>
 /// LESSON 2 — Locators: how you find things on the page.
