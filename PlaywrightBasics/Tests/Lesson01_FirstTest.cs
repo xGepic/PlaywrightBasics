@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 
-namespace PlaywrightBasics.Basics;
+namespace PlaywrightBasics.Tests;
 
 /// <summary>
 /// LESSON 1 — The shape of a Playwright test.
