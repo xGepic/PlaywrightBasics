@@ -19,8 +19,7 @@ namespace PlaywrightBasics.Tests;
 [Parallelizable(ParallelScope.Self)]
 public class Lesson03_Assertions : PageTest
 {
-    private static string DemoPage =>
-        new Uri(Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "demo-form.html")).AbsoluteUri;
+    private static string DemoPage => new Uri(Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "demo-form.html")).AbsoluteUri;
 
     [SetUp]
     public async Task OpenDemoPage() => await Page.GotoAsync(DemoPage);
@@ -28,24 +27,20 @@ public class Lesson03_Assertions : PageTest
     [Test]
     public async Task Auto_Retrying_Assertions_Handle_Slow_Ui()
     {
-        // The profile card only appears 1.2 seconds after the click.
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Load profile" }).ClickAsync();
+        // The profile card only appears 1.2 seconds after the click. No Thread.Sleep, no explicit wait. Expect() polls until it shows up.
 
-        // No Thread.Sleep, no explicit wait. Expect() polls until it shows up.
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Load profile" }).ClickAsync();
         await Expect(Page.GetByTestId("profile-card")).ToBeVisibleAsync();
     }
 
     [Test]
     public async Task The_Same_Thing_Without_Retrying_Is_Flaky()
     {
+        // IsVisibleAsync() is a one-shot snapshot: no waiting at all. It is still hidden, because we asked 1.2s too early.
+
         await Page.GetByRole(AriaRole.Button, new() { Name = "Load profile" }).ClickAsync();
-
-        // IsVisibleAsync() is a one-shot snapshot: no waiting at all.
         bool visibleRightNow = await Page.GetByTestId("profile-card").IsVisibleAsync();
-
-        // It is still hidden, because we asked 1.2s too early.
-        Assert.That(visibleRightNow, Is.False,
-            "This is the trap: one-shot checks race the UI. Prefer Expect().");
+        Assert.That(visibleRightNow, Is.False, "This is the trap: one-shot checks race the UI. Prefer Expect().");
     }
 
     [Test]
@@ -87,15 +82,13 @@ public class Lesson03_Assertions : PageTest
 
         // Default is 5s. Raise it for a genuinely slow operation rather than
         // sprinkling sleeps through the test.
-        await Expect(Page.GetByTestId("profile-card"))
-            .ToBeVisibleAsync(new() { Timeout = 10_000 });
+        await Expect(Page.GetByTestId("profile-card")).ToBeVisibleAsync(new() { Timeout = 10_000 });
     }
 
     [Test]
     public async Task A_Soft_Alternative_Collect_Several_Failures()
     {
-        // Playwright .NET has no soft assertions, but NUnit's Assert.Multiple
-        // works for the non-retrying checks you have already awaited.
+        // Playwright .NET has no soft assertions, but NUnit's Assert.Multiple works for the non-retrying checks you have already awaited.
         string status = await Page.GetByRole(AriaRole.Status).InnerTextAsync();
         int rowCount = await Page.GetByTestId("orders").Locator("tbody tr").CountAsync();
 
