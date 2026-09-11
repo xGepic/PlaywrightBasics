@@ -20,21 +20,18 @@ namespace PlaywrightBasics.Tests;
 [Parallelizable(ParallelScope.Self)]
 public class Lesson05_FixturesAndHooks : PageTest
 {
-    private static string DemoPage =>
-        new Uri(Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "demo-form.html")).AbsoluteUri;
-
     /// <summary>
     /// Override ContextOptions to configure the context PageTest builds for you:
     /// viewport, locale, timezone, permissions, credentials, storage state...
     /// </summary>
+    private static string DemoPage => new Uri(Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "demo-form.html")).AbsoluteUri;
+
     public override BrowserNewContextOptions ContextOptions() => new()
     {
         ViewportSize = new() { Width = 1280, Height = 800 },
         Locale = "de-AT",
         TimezoneId = "Europe/Vienna",
         IgnoreHTTPSErrors = true,
-        // RecordVideoDir = "videos/",           // uncomment to record every test
-        // StorageStatePath = "auth/state.json", // reuse a logged-in session
     };
 
     [SetUp]
@@ -76,12 +73,11 @@ public class Lesson05_FixturesAndHooks : PageTest
     {
         // Two tabs that share cookies and storage — useful for testing things
         // like "log out in one tab, the other tab notices".
+        
         var secondPage = await Context.NewPageAsync();
+        
         await secondPage.GotoAsync(DemoPage);
-
-        await Expect(secondPage.GetByRole(AriaRole.Heading, new() { Name = "Playwright Demo Form" }))
-            .ToBeVisibleAsync();
-
+        await Expect(secondPage.GetByRole(AriaRole.Heading, new() { Name = "Playwright Demo Form" })).ToBeVisibleAsync();
         await secondPage.CloseAsync();
     }
 
