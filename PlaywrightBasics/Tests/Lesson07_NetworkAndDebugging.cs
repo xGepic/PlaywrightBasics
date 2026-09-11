@@ -52,8 +52,7 @@ public class Lesson07_NetworkAndDebugging : PageTest
     [Test]
     public async Task Simulating_A_Server_Error()
     {
-        await Page.RouteAsync("**/api/orders", async route =>
-            await route.FulfillAsync(new() { Status = 500, Body = "boom" }));
+        await Page.RouteAsync("**/api/orders", async route => await route.FulfillAsync(new() { Status = 500, Body = "boom" }));
 
         await ServePageAsync("""
             <p id="msg">loading…</p>
@@ -104,9 +103,7 @@ public class Lesson07_NetworkAndDebugging : PageTest
         });
 
         // A single element, rather than the whole viewport.
-        await Page.GetByRole(AriaRole.Navigation).First
-            .ScreenshotAsync(new() { Path = Path.Combine(dir, "navbar.png") });
-
+        await Page.GetByRole(AriaRole.Navigation).First.ScreenshotAsync(new() { Path = Path.Combine(dir, "navbar.png") });
         Assert.That(File.Exists(Path.Combine(dir, "homepage.png")));
     }
 
@@ -152,9 +149,7 @@ public class Lesson07_NetworkAndDebugging : PageTest
     /// </summary>
     private async Task ServePageAsync(string html)
     {
-        await Page.RouteAsync("https://demo.test/", async route =>
-            await route.FulfillAsync(new() { ContentType = "text/html", Body = html }));
-
+        await Page.RouteAsync("https://demo.test/", async route => await route.FulfillAsync(new() { ContentType = "text/html", Body = html }));
         await Page.GotoAsync("https://demo.test/");
     }
 }
