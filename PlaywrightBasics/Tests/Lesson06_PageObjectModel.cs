@@ -30,7 +30,6 @@ public class Lesson06_PageObjectModel : PageTest
     public async Task Registering_Greets_The_User_By_Name()
     {
         await _signup.RegisterAsync("ada.lovelace", "ada@example.com");
-
         await Expect(_signup.Status).ToContainTextAsync("Welcome, ada.lovelace!");
     }
 
@@ -38,7 +37,6 @@ public class Lesson06_PageObjectModel : PageTest
     public async Task The_Chosen_Plan_Is_Reflected_In_The_Confirmation()
     {
         await _signup.RegisterAsync("grace", "grace@example.com", plan: "Pro");
-
         await Expect(_signup.Status).ToContainTextAsync("Plan: pro.");
     }
 
@@ -47,9 +45,7 @@ public class Lesson06_PageObjectModel : PageTest
     {
         await _signup.RegisterAsync("alan", "alan@example.com");
         await Expect(_signup.Status).ToContainTextAsync("Welcome, alan!");
-
         await _signup.ResetAsync();
-
         await Expect(_signup.Status).ToHaveTextAsync("Not submitted yet.");
         await Expect(_signup.PlanRadio("Free")).ToBeCheckedAsync();
     }
@@ -60,7 +56,6 @@ public class Lesson06_PageObjectModel : PageTest
     public async Task Several_Users_Can_Register(string user, string country, string expectedPlan)
     {
         await _signup.RegisterAsync(user, $"{user}@example.com", country: country);
-
         await Expect(_signup.Status).ToContainTextAsync($"Welcome, {user}!");
         await Expect(_signup.Status).ToContainTextAsync($"Plan: {expectedPlan}.");
     }
