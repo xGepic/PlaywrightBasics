@@ -17,13 +17,12 @@ namespace PlaywrightBasics.Tests;
 ///   3. GetByText / GetByAltText / GetByTitle
 ///   4. GetByTestId      — when the above are ambiguous
 ///   5. CSS / XPath      — last resort, breaks when markup changes
+///   file:// URL of the local page in TestData, copied next to the test DLL.</summary>
 /// </summary>
 [Parallelizable(ParallelScope.Self)]
 public class Lesson02_Locators : PageTest
 {
-    /// <summary>file:// URL of the local page in TestData, copied next to the test DLL.</summary>
-    private static string DemoPage =>
-        new Uri(Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "demo-form.html")).AbsoluteUri;
+    private static string DemoPage => new Uri(Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "demo-form.html")).AbsoluteUri;
 
     [SetUp]
     public async Task OpenDemoPage() => await Page.GotoAsync(DemoPage);
@@ -51,8 +50,7 @@ public class Lesson02_Locators : PageTest
     [Test]
     public async Task Css_And_XPath_Still_Exist()
     {
-        // These work, but they couple your test to the markup. Reach for them
-        // only when nothing above fits.
+        // These work, but they couple your test to the markup. Reach for them only when nothing above fits.
         await Expect(Page.Locator("#username")).ToBeVisibleAsync();
         await Expect(Page.Locator("css=input[type=email]")).ToBeVisibleAsync();
         await Expect(Page.Locator("xpath=//table[@data-testid='orders']//tbody/tr")).ToHaveCountAsync(3);
@@ -84,20 +82,17 @@ public class Lesson02_Locators : PageTest
         await Expect(rows.Nth(1)).ToContainTextAsync("Monitor");   // zero-based
         await Expect(rows.Last).ToContainTextAsync("Mouse");
 
-        // Acting on a locator that matches several elements throws "strict mode
-        // violation" instead of silently using the first one. That strictness is
-        // a feature: it catches ambiguous selectors early.
+        // Acting on a locator that matches several elements throws "strict mode violation" instead of silently using the first one.
+        // That strictness is a feature: it catches ambiguous selectors early.
         var ambiguous = Page.Locator("input[type=checkbox]");
-        await Assert.ThatAsync(() => ambiguous.CheckAsync(),
-            Throws.TypeOf<PlaywrightException>().With.Message.Contains("strict mode"));
+        await Assert.ThatAsync(() => ambiguous.CheckAsync(), Throws.TypeOf<PlaywrightException>().With.Message.Contains("strict mode"));
     }
 
     [Test]
     public async Task Combining_Locators()
     {
         // Or: matches either. And: must match both.
-        var submitOrReset = Page.GetByRole(AriaRole.Button, new() { Name = "Create account" })
-            .Or(Page.GetByRole(AriaRole.Button, new() { Name = "Reset" }));
+        var submitOrReset = Page.GetByRole(AriaRole.Button, new() { Name = "Create account" }).Or(Page.GetByRole(AriaRole.Button, new() { Name = "Reset" }));
         await Expect(submitOrReset).ToHaveCountAsync(2);
 
         var checkedRadio = Page.Locator("input[name=plan]").And(Page.Locator(":checked"));
